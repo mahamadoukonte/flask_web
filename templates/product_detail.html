@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} - My Store{% endblock %}
+
+{% block content %} 
+<div class="container my-5">
+    <!-- Breadcrumb Navigation -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('products') }}">Products</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <!-- Product Image -->
+        <div class="col-md-6 mb-4 mb-md-0">
+            <img src="{{ url_for('static', filename='images/' + product.image) }}" class="img-fluid rounded shadow-sm w-100" alt="{{ product.name }}">
+        </div>
+
+        <!-- Product Information -->
+        <div class="col-md-6">
+            <h1 class="display-5 fw-bold">{{ product.name }}</h1>
+            <h3 class="text-primary my-3">{{ product.price }}</h3>
+            <p class="lead">{{ product.description or 'No description available for this product.' }}</p>
+
+            <!-- Form submits directly to current route -->
+            <form action="{{ url_for('product_detail', product_id=product.id) }}" method="POST" class="mt-4">
+                <div class="mb-3 d-flex align-items-center gap-3">
+                    <label for="quantity" class="form-label mb-0 fw-bold">Quantity:</label>
+                    <input type="number" id="quantity" name="quantity" value="1" min="1" class="form-control w-25">
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-success btn-lg">Add to Cart</button>
+                    <a href="{{ url_for('products') }}" class="btn btn-outline-secondary btn-lg">Back to Store</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
