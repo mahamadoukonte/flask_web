@@ -27,23 +27,20 @@ def products():
     return render_template("products.html", collections = PRODUCTS)
 
 
-@app.route("/products/<int:product_id>", methods=['GET', 'POST'])
+@app.route("/products/<int:product_id>")
 def product_detail(product_id):
-    product = next((p for p in PRODUCTS if p['id'] == product_id), None)
-    if product is None:
-        abort(404)
-        
-    if request.method == 'POST':
-        # Retrieve form data submitted from product_detail.html
-        quantity = request.form.get('quantity', 1)
-        
-        # Cart handling logic goes here (e.g., storing in flask session)
-        print(f"Added product ID {product_id} with quantity {quantity} to cart.")
-        
-        # Redirect after POST to prevent accidental duplicate submissions on page refresh
-        return redirect(url_for('products'))
 
-    return render_template("product_detail.html", product=product)
+    select_product = None
+
+    for product in PRODUCTS:
+        if product['id'] == product_id:
+            select_product = product
+            break
+
+    if select_product == None:
+        abort(404)
+
+    return render_template("product_detail.html", product = select_product )
 
 
 @app.route("/about")
