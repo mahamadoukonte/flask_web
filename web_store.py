@@ -16,6 +16,18 @@ PRODUCTS = [
     {'id': 12, 'name': 'NIKE SF', 'price': '64', 'image': 'header_3.jpg', 'description': 'Versatile performance top for all workouts.'}
 ]
 
+cart_items = []
+
+def is_item_in_cart(product_id_p):
+
+    counter =0
+    for item in cart_items:
+        if item['id'] == product_id_p:
+
+            return True, counter
+        counter += 1
+    return False, counter
+
 
 @app.route("/")
 def home():
@@ -25,7 +37,6 @@ def home():
 def products():
     # collections =[ 'men', 'women', 'kids']
     return render_template("products.html", collections = PRODUCTS)
-
 
 @app.route("/products/<int:product_id>")
 def product_detail(product_id):
@@ -42,6 +53,39 @@ def product_detail(product_id):
 
     return render_template("product_detail.html", product = select_product )
 
+@app.route('/cart')
+def cart():
+    product_id = request.args.get('product_id', type=int)
+    quantity = request.args.get('quantity', default=1, type=int)
+
+    total_price = 0
+    
+    # global total_item
+    # global subtotal
+    # global total_price
+
+    if product_id:
+        for item in PRODUCTS:
+            if item["id"]==product_id:
+                subtotal = int(item['price']) * quantity
+
+                if is_item_in_cart(product_id)[0]== False:
+                    cart_items.append({'id': item['id'],
+                                       'name': item['name'],
+                                       'price': item['price'],
+                                       'image': item['image'],
+                                       'quantity': quantity,
+                                       'sub_total': subtotal})
+                else:
+                    index = is_item_in_cart(product_id)[1]
+                    cart_items[index]['quantity'] = quantity
+                        
+                # cart_items.append(item)
+                # total_item = quantity
+                break
+    total_price += subtotal
+
+    return render_template("cart.html", cart= cart_items, total_price= total_price )
 
 @app.route("/about")
 def about():
