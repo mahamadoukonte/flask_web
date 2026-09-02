@@ -3,6 +3,7 @@
 {% block title %}{{ product.name }} - My Store{% endblock %}
 
 {% block content %} 
+
 <div class="container my-5">
     <!-- Breadcrumb Navigation -->
     <nav aria-label="breadcrumb">
@@ -25,7 +26,9 @@
             <p class="lead">{{ product.description or 'No description available for this product.' }}</p>
 
             <!-- Form submits directly to current route -->
-            <form action="{{ url_for('product_detail', product_id=product.id) }}" method="POST" class="mt-4">
+            <form action="{{ url_for('cart') }}" method="GET" class="mt-4">
+                <input type="hidden" name="product_id" value="{{ product.id }}">
+                
                 <div class="mb-3 d-flex align-items-center gap-3">
                     <label for="quantity" class="form-label mb-0 fw-bold">Quantity:</label>
                     <input type="number" id="quantity" name="quantity" value="1" min="1" class="form-control w-25">
